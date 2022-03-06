@@ -20,7 +20,7 @@ This code is a combination of two main arduino projects.
 
 Main part is from Qrome/marquee-scroller
 
-2nd part is from KiKi's code for a YouTube monitor:
+2nd part is from kiki hobby repair's code for a YouTube monitor:
 
 https://www.youtube.com/watch?v=19NfoJHLdIc
 
