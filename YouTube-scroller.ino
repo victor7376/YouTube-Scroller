@@ -16,21 +16,34 @@
 #include <ArduinoJson.h>
 
 //============================ Your WIFI Network Details ==============================
-const char* ssid     = "";          // Your SSID / WiFi Network
-const char* password = "";  // Your SSID / WiFi Password
+const char* ssid     = "YOUR_SSID";          // Your SSID / WiFi Network
+const char* password = "YOUR_WIFI_PASSWORD";  // Your SSID / WiFi Password
 //=====================================================================================
 
 //================================ TimezoneDB Settings ================================
-String TIMEDBKEY = ""; // Your API Key from https://timezonedb.com/register
+String TIMEDBKEY = "YOUR_TIMEDB_KEY"; // Your API Key from https://timezonedb.com/register
 
 // Location taaken from TimezoneDB - can be taken from the homepage
-String LAT = "";          // Latitude
-String LON = "";          // Longitude
+String LAT = "YOUR_LAT";          // Latitude
+String LON = "YOUR_LON";          // Longitude
 //=========================== YouTube Details ========================================
-boolean YOUTUBE_ENABLED = false; // Change to true to be enabled
-String CHANNEL_ID = "";
-String API_KEY = "";
+boolean YOUTUBE_ENABLED = true;
+String CHANNEL_ID = "YOUR_ID_HERE"; // Channel ID (NOT your channel name)
+String API_KEY = "YOUR_API_KEY_HERE"; // API Key from Google dashboard https://console.developers.google.com/apis/credentials
 //=====================================================================================
+String Wide_Clock_Style = "3"; 
+// 1 = HH:MM (no indicator or seconds colon)
+// 2 = Normal (flashing indicator)
+// 3 = Clock (inc.seconds) & Date
+// 4 = Clock & YouTube subscriber count (will need a long display around 12 - 16 displays)
+//=====================================================================================
+// Here you can choose how many displays you have - Displays come in a set of 4, so double would be 8 etc
+const int numberOfHorizontalDisplays = 4; // default 4 for standard 4 x 1 display Max size of 24 works
+const int numberOfVerticalDisplays = 1; // default 1 for a single row height
+//=====================================================================================
+String timeDisplayTurnsOn = "08:30";  // 24 Hour Format HH:MM -- Leave blank for always on. (ie 05:30)
+String timeDisplayTurnsOff = "22:30"; // 24 Hour Format HH:MM -- Leave blank for always on. Both must be set to work.
+
 /* Useful Constants */
 #define SECS_PER_MIN  (60UL)
 #define SECS_PER_HOUR (3600UL)
@@ -43,10 +56,6 @@ String API_KEY = "";
 
 const int pinCS = D6; // Attach CS to this pin, DIN to MOSI and CLK to SCK (cf http://arduino.cc/en/Reference/SPI )
 
-// Here you can choose how many displays you have - Displays come in a set of 4, so double would be 8 etc
-const int numberOfHorizontalDisplays = 4; // default 4 for standard 4 x 1 display Max size of 24 works
-const int numberOfVerticalDisplays = 1; // default 1 for a single row height
-
 int displayIntensity = 1;  //(This can be set from 0 - 15) - how bright you want the display
 int minutesBetweenDataRefresh = 15;  // Time in minutes between data refresh (default 15 minutes)
 int minutesBetweenScrolling = 3; // Time in minutes between scrolling data (default 1 minutes and max is 10)
@@ -55,8 +64,6 @@ boolean flashOnSeconds = true; // when true the : character in the time will fla
 boolean IS_24HOUR = true; // 23:00 millitary 24 hour clock
 boolean IS_PM = true; // Show PM indicator on Clock when in AM/PM mode
 int ledRotation = 3;
-String timeDisplayTurnsOn = "08:30";  // 24 Hour Format HH:MM -- Leave blank for always on. (ie 05:30)
-String timeDisplayTurnsOff = "22:30"; // 24 Hour Format HH:MM -- Leave blank for always on. Both must be set to work.
 String marqueeMessage = "";           // Custom Message if wanted
 
 // LED Settings
@@ -65,7 +72,7 @@ int refresh = 0;
 String message = "hi";
 int spacer = 1;  // dots between letters
 int width = 5 + spacer; // The font width is 5 pixels + spacer
-String Wide_Clock_Style = "3";
+
 Max72xxPanel matrix = Max72xxPanel(pinCS, numberOfHorizontalDisplays, numberOfVerticalDisplays);
 
 // TimeDB - do NOT alter
@@ -305,9 +312,16 @@ void loop() {
       // No change this is normal clock display
     }
     
-    if (Wide_Clock_Style == "4") {
+    if (Wide_Clock_Style == "3") {
       String timeSpacer = " ";
       currentTime += secondsIndicator(true) + TimeDB.zeroPad(second()) + timeSpacer + day() + "/" + month() + "/" + String(year());
+      
+      matrix.fillScreen(LOW); // show black
+    }
+
+    if (Wide_Clock_Style == "4") {
+      String timeSpacer = " ";
+      currentTime += secondsIndicator(true) + timeSpacer + "YT: " + subs_mod;
       
       matrix.fillScreen(LOW); // show black
     }
