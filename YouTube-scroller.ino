@@ -268,7 +268,7 @@ void loop() {
       msg += "th, ";
       }
         
-      msg += TimeDB.getMonthName() + ", " + year() +" :";  //  moved day to previous line, added comma after month name, added year display and colon
+      msg += TimeDB.getMonthName() + ", " + String(year()) +" :";  //  moved day to previous line, added comma after month name, added year display and colon
       
       msg += marqueeMessage + " "; // custom message
 
@@ -307,7 +307,7 @@ void loop() {
     
     if (Wide_Clock_Style == "4") {
       String timeSpacer = " ";
-      currentTime += secondsIndicator(true) + TimeDB.zeroPad(second()) + timeSpacer + day() + "/" + month() + "/" +year();
+      currentTime += secondsIndicator(true) + TimeDB.zeroPad(second()) + timeSpacer + day() + "/" + month() + "/" + String(year());
       
       matrix.fillScreen(LOW); // show black
     }
